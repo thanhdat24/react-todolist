@@ -16,11 +16,51 @@ import { Dropdown } from "../Components/Dropdown";
 import { LightTheme } from "../Themes/LightTheme";
 import { PrimaryTheme } from "../Themes/PrimaryTheme";
 import { ThemeProvider } from "styled-components";
+import { connect } from "react-redux";
 
-export default class ToDoList extends Component {
+class ToDoList extends Component {
+  renderTaskToDo = () => {
+    return this.props.taskList
+      .filter((task) => task.done)
+      .map((task, index) => {
+        return (
+          <Tr key={index}>
+            <Th style={{ verticalAlign: "middle" }}>{task.taskName}</Th>
+            <Th className="text-right">
+              <Button>
+                <i className="fa fa-trash"></i>
+              </Button>
+              <Button className="mx-2">
+                <i className="fa fa-edit"></i>
+              </Button>
+              <Button>
+                <i className="fa fa-check"></i>
+              </Button>
+            </Th>
+          </Tr>
+        );
+      });
+  };
+
+  renderTaskCompleted = () => {
+    return this.props.taskList
+      .filter((task) => !task.done)
+      .map((task, index) => {
+        return (
+          <Tr key={index}>
+            <Th style={{ verticalAlign: "middle" }}>{task.taskName}</Th>
+            <Th className="text-right">
+              <Button>
+                <i className="fa fa-trash"></i>
+              </Button>
+            </Th>
+          </Tr>
+        );
+      });
+  };
   render() {
     return (
-      <ThemeProvider theme={DarkTheme}>
+      <ThemeProvider theme={this.props.themToDoList}>
         {" "}
         <Container className="w-50">
           <Dropdown className="my-2">
@@ -38,60 +78,21 @@ export default class ToDoList extends Component {
           </Button>
           <Heading3 className="mt-4 mb-3">Task to do</Heading3>
           <Table>
-            <Thead>
-              <Tr>
-                <Th style={{ verticalAlign: "middle" }}>Task name</Th>
-                <Th className="text-right">
-                  <Button>
-                    <i className="fa fa-trash"></i>
-                  </Button>
-                  <Button className="mx-2">
-                    <i className="fa fa-edit"></i>
-                  </Button>
-                  <Button>
-                    <i className="fa fa-check"></i>
-                  </Button>
-                </Th>
-              </Tr>
-              <Tr>
-                <Th style={{ verticalAlign: "middle" }}>Task name</Th>
-                <Th className="text-right">
-                  <Button>
-                    <i className="fa fa-trash"></i>
-                  </Button>
-                  <Button className="mx-2">
-                    <i className="fa fa-edit"></i>
-                  </Button>
-                  <Button>
-                    <i className="fa fa-check"></i>
-                  </Button>
-                </Th>
-              </Tr>
-            </Thead>
+            <Thead>{this.renderTaskToDo()}</Thead>
           </Table>
           <Heading3 className="mt-4 mb-3">Task completed</Heading3>
           <Table>
-            <Thead>
-              <Tr>
-                <Th style={{ verticalAlign: "middle" }}>Task name</Th>
-                <Th className="text-right">
-                  <Button>
-                    <i className="fa fa-trash"></i>
-                  </Button>
-                </Th>
-              </Tr>
-              <Tr>
-                <Th style={{ verticalAlign: "middle" }}>Task name</Th>
-                <Th className="text-right">
-                  <Button>
-                    <i className="fa fa-trash"></i>
-                  </Button>
-                </Th>
-              </Tr>
-            </Thead>
+            <Thead>{this.renderTaskCompleted()}</Thead>
           </Table>
         </Container>
       </ThemeProvider>
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    themToDoList: state.ToDoListReducer.themToDoList,
+    taskList: state.ToDoListReducer.taskList,
+  };
+};
+export default connect(mapStateToProps)(ToDoList);
