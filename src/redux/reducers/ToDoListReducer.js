@@ -1,4 +1,9 @@
-import { add_task, change_theme } from "../types/ToDoListTypes";
+import {
+  add_task,
+  change_theme,
+  delete_task,
+  done_task,
+} from "../types/ToDoListTypes";
 
 import { DarkTheme } from "../../JSS_StyledComponent/Themes/DarkTheme";
 import { arrTheme } from "../../JSS_StyledComponent/Themes/ThemeManager";
@@ -54,6 +59,32 @@ export const ToDoListReducer = (state = initialState, action) => {
       let themeIndex = arrTheme.find((theme) => theme.id == action.themeId);
       if (themeIndex) state.themToDoList = { ...themeIndex.theme };
       return { ...state };
+    }
+    case done_task: {
+      let taskListUpdate = [...state.taskList];
+      let index = taskListUpdate.findIndex((task) => task.id === action.taskId);
+
+      if (index !== -1) taskListUpdate[index].done = true;
+      return { ...state, taskList: taskListUpdate };
+    }
+    case delete_task: {
+      let taskListUpdate = [...state.taskList];
+      // C1:
+      // let index = taskListUpdate.findIndex((task) => task.id === action.taskId);
+
+      // if (index !== -1) taskListUpdate.splice(index, 1);
+
+      // C2:
+      // taskListUpdate = taskListUpdate.filter(
+      //   (task) => task.id !== action.taskId
+      // );
+      // return { ...state, taskList: taskListUpdate };
+
+      // C3:
+      return {
+        ...state,
+        taskList: state.taskList.filter((task) => task.id !== action.taskId),
+      };
     }
     default:
       return { ...state };

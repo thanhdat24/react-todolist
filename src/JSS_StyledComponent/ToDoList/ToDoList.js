@@ -11,6 +11,8 @@ import { Table, Tbody, Td, Th, Thead, Tr } from "../Components/Table";
 import {
   addTaskACtion,
   changeThemeAction,
+  deleteTaskAction,
+  doneTaskAction,
 } from "../../redux/actions/ToDoListActions";
 
 import { Button } from "../Components/Button";
@@ -41,7 +43,11 @@ class ToDoList extends Component {
               <Button className="mx-2">
                 <i className="fa fa-edit"></i>
               </Button>
-              <Button>
+              <Button
+                onClick={() => {
+                  this.props.dispatch(doneTaskAction(task.id));
+                }}
+              >
                 <i className="fa fa-check"></i>
               </Button>
             </Th>
@@ -58,7 +64,11 @@ class ToDoList extends Component {
           <Tr key={index}>
             <Th style={{ verticalAlign: "middle" }}>{task.taskName}</Th>
             <Th className="text-right">
-              <Button>
+              <Button
+                onClick={() => {
+                  this.props.dispatch(deleteTaskAction(task.id));
+                }}
+              >
                 <i className="fa fa-trash"></i>
               </Button>
             </Th>
