@@ -8,6 +8,10 @@ import {
 import { Input, Label, TextField } from "../Components/TextField";
 import React, { Component } from "react";
 import { Table, Tbody, Td, Th, Thead, Tr } from "../Components/Table";
+import {
+  addTaskACtion,
+  changeThemeAction,
+} from "../../redux/actions/ToDoListActions";
 
 import { Button } from "../Components/Button";
 import { Container } from "../Containers/Containers";
@@ -16,7 +20,7 @@ import { Dropdown } from "../Components/Dropdown";
 import { LightTheme } from "../Themes/LightTheme";
 import { PrimaryTheme } from "../Themes/PrimaryTheme";
 import { ThemeProvider } from "styled-components";
-import { addTaskACtion } from "../../redux/actions/ToDoListActions";
+import { arrTheme } from "../Themes/ThemeManager";
 import { connect } from "react-redux";
 
 class ToDoList extends Component {
@@ -62,15 +66,26 @@ class ToDoList extends Component {
         );
       });
   };
+
+  renderTheme = () => {
+    return arrTheme.map((theme, index) => {
+      return <option value={theme.id}>{theme.name}</option>;
+    });
+  };
   render() {
     return (
       <ThemeProvider theme={this.props.themToDoList}>
         {" "}
         <Container className="w-50">
-          <Dropdown className="my-2">
-            <option>Dark theme</option>
-            <option>Light theme</option>
-            <option>Primary theme</option>
+          <Dropdown
+            onChange={(e) => {
+              let { value } = e.target;
+              // Dispatch value ên reducer
+              this.props.dispatch(changeThemeAction(value));
+            }}
+            className="my-2"
+          >
+            {this.renderTheme()}
           </Dropdown>
           <Heading2 className="mb-5">To do list</Heading2>
           <TextField

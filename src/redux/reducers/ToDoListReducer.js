@@ -1,5 +1,7 @@
+import { add_task, change_theme } from "../types/ToDoListTypes";
+
 import { DarkTheme } from "../../JSS_StyledComponent/Themes/DarkTheme";
-import { add_task } from "../types/ToDoListTypes";
+import { arrTheme } from "../../JSS_StyledComponent/Themes/ThemeManager";
 
 const initialState = {
   themToDoList: DarkTheme,
@@ -47,7 +49,12 @@ export const ToDoListReducer = (state = initialState, action) => {
       state.taskList = taskListUpdate;
       return { ...state };
     }
-
+    case change_theme: {
+      // Tìm theme dựa vào action.themId được chọn
+      let themeIndex = arrTheme.find((theme) => theme.id == action.themeId);
+      if (themeIndex) state.themToDoList = { ...themeIndex.theme };
+      return { ...state };
+    }
     default:
       return { ...state };
   }
