@@ -1,4 +1,5 @@
 import { DarkTheme } from "../../JSS_StyledComponent/Themes/DarkTheme";
+import { add_task } from "../types/ToDoListTypes";
 
 const initialState = {
   themToDoList: DarkTheme,
@@ -28,6 +29,25 @@ const initialState = {
 
 export const ToDoListReducer = (state = initialState, action) => {
   switch (action.type) {
+    case add_task: {
+      if (action.newTask.taskName.trim() === "") {
+        alert("Task name is required!");
+        return;
+      }
+
+      let taskListUpdate = [...state.taskList];
+      let index = taskListUpdate.findIndex(
+        (task) => task.taskName === action.newTask.taskName
+      );
+      if (index !== -1) {
+        alert("task name already exists!");
+        return { ...state };
+      }
+      taskListUpdate.push(action.newTask);
+      state.taskList = taskListUpdate;
+      return { ...state };
+    }
+
     default:
       return { ...state };
   }
