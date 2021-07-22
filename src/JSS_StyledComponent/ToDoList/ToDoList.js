@@ -13,6 +13,7 @@ import {
   changeThemeAction,
   deleteTaskAction,
   doneTaskAction,
+  editTaskAction,
 } from "../../redux/actions/ToDoListActions";
 
 import { Button } from "../Components/Button";
@@ -40,7 +41,12 @@ class ToDoList extends Component {
               <Button>
                 <i className="fa fa-trash"></i>
               </Button>
-              <Button className="mx-2">
+              <Button
+                onClick={() => {
+                  this.props.dispatch(editTaskAction(task));
+                }}
+                className="mx-2"
+              >
                 <i className="fa fa-edit"></i>
               </Button>
               <Button
@@ -99,6 +105,7 @@ class ToDoList extends Component {
           </Dropdown>
           <Heading2 className="mb-5">To do list</Heading2>
           <TextField
+            value={this.props.taskEdit.taskName}
             onChange={(event) => {
               this.setState({
                 taskName: event.target.value,
@@ -145,6 +152,7 @@ const mapStateToProps = (state) => {
   return {
     themToDoList: state.ToDoListReducer.themToDoList,
     taskList: state.ToDoListReducer.taskList,
+    taskEdit: state.ToDoListReducer.taskEdit,
   };
 };
 export default connect(mapStateToProps)(ToDoList);

@@ -3,6 +3,7 @@ import {
   change_theme,
   delete_task,
   done_task,
+  edit_task,
 } from "../types/ToDoListTypes";
 
 import { DarkTheme } from "../../JSS_StyledComponent/Themes/DarkTheme";
@@ -32,6 +33,7 @@ const initialState = {
       done: false,
     },
   ],
+  taskEdit: { id: "task-1", taskName: "task 1", done: false },
 };
 
 export const ToDoListReducer = (state = initialState, action) => {
@@ -56,7 +58,7 @@ export const ToDoListReducer = (state = initialState, action) => {
     }
     case change_theme: {
       // Tìm theme dựa vào action.themId được chọn
-      let themeIndex = arrTheme.find((theme) => theme.id == action.themeId);
+      let themeIndex = arrTheme.find((theme) => theme.id === action.themeId);
       if (themeIndex) state.themToDoList = { ...themeIndex.theme };
       return { ...state };
     }
@@ -68,7 +70,7 @@ export const ToDoListReducer = (state = initialState, action) => {
       return { ...state, taskList: taskListUpdate };
     }
     case delete_task: {
-      let taskListUpdate = [...state.taskList];
+      // let taskListUpdate = [...state.taskList];
       // C1:
       // let index = taskListUpdate.findIndex((task) => task.id === action.taskId);
 
@@ -85,6 +87,9 @@ export const ToDoListReducer = (state = initialState, action) => {
         ...state,
         taskList: state.taskList.filter((task) => task.id !== action.taskId),
       };
+    }
+    case edit_task: {
+      return { ...state, taskEdit: action.task };
     }
     default:
       return { ...state };
