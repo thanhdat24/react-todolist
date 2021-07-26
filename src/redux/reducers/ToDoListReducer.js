@@ -4,13 +4,14 @@ import {
   delete_task,
   done_task,
   edit_task,
+  update_task,
 } from "../types/ToDoListTypes";
 
 import { DarkTheme } from "../../JSS_StyledComponent/Themes/DarkTheme";
 import { arrTheme } from "../../JSS_StyledComponent/Themes/ThemeManager";
 
 const initialState = {
-  themToDoList: DarkTheme,
+  themeToDoList: DarkTheme,
   taskList: [
     {
       id: "task-1",
@@ -33,7 +34,7 @@ const initialState = {
       done: false,
     },
   ],
-  taskEdit: { id: "task-1", taskName: "task 1", done: false },
+  taskEdit: { id: "-1", taskName: "", done: false },
 };
 
 export const ToDoListReducer = (state = initialState, action) => {
@@ -41,7 +42,7 @@ export const ToDoListReducer = (state = initialState, action) => {
     case add_task: {
       if (action.newTask.taskName.trim() === "") {
         alert("Task name is required!");
-        return;
+        return { ...state };
       }
 
       let taskListUpdate = [...state.taskList];
@@ -58,8 +59,8 @@ export const ToDoListReducer = (state = initialState, action) => {
     }
     case change_theme: {
       // Tìm theme dựa vào action.themId được chọn
-      let themeIndex = arrTheme.find((theme) => theme.id === action.themeId);
-      if (themeIndex) state.themToDoList = { ...themeIndex.theme };
+      let themeIndex = arrTheme.find((theme) => theme.id == action.themeId);
+      if (themeIndex) state.themeToDoList = { ...themeIndex.theme };
       return { ...state };
     }
     case done_task: {
@@ -90,6 +91,33 @@ export const ToDoListReducer = (state = initialState, action) => {
     }
     case edit_task: {
       return { ...state, taskEdit: action.task };
+    }
+    case update_task: {
+      // Chỉnh sửa lại taskName của taskEdit
+      state.taskEdit = { ...state.taskEdit, taskName: action.taskName };
+
+      //Tìm trong taskList cập mjaapj lại taskEdit người dùng update
+      let taskListUpdate = [...state.taskList];
+
+      let index = taskListUpdate.findIndex(
+        (task) => task.id === state.taskEdit.id
+      );
+      let indexName = taskListUpdate.findIndex(
+        (task) => task.taskName === action.taskName
+      );
+
+      if (index !== -1) {
+        taskListUpdate[index] = state.taskEdit;
+      }
+      if (indexName !== -1) {
+        alert("task name already exists!");
+        return { ...state, taskEdit: { id: "-1", taskName: "", done: false } };
+      }
+      return {
+        ...state,
+        taskList: taskListUpdate,
+        taskEdit: { id: "-1", taskName: "", done: false },
+      };
     }
     default:
       return { ...state };
