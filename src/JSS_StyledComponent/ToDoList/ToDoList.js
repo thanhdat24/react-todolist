@@ -198,12 +198,12 @@ class ToDoList extends Component {
     );
   }
 
-  // Đây là lifecycle trả về props ũ và state cũ của component trước khi render (lifecycle chạy sau render)
+  // Đây là lifecycle trả về props cũ và state cũ của component trước khi render (lifecycle chạy sau render)
   componentDidUpdate(prevProps, prevState) {
     // So sánh nếu như props trước đó (taskEdit trước mà khác taskEdit hiện tại thì mình mới setState)
     if (prevProps.taskEdit.id !== this.props.taskEdit.id)
       this.setState({
-        taskName: this.props.taskEdit.taskName,
+        taskName: this.props.taskEdit.taskName, 
       });
   }
 }
